@@ -37,6 +37,13 @@ jobs:
           debug: false
           command: |
             cd nodeapps/2025/project2/t3
+            echo "setting up .env file"
+            touch .env
+            echo DB_HOST=${{DB_HOST}} >> .env
+            echo DB_USER=${{DB_USER}} >> .env
+            echo DB_PASSWORD=${{DB_PASSWORD}} >> .env
+            echo DB_SCHEMA=${{DB_SCHEMA}} >> .env
+            echo "finished setting up .env file"
             npm install
             sudo systemctl stop course-backend-t3
             sudo cp course-backend.service /lib/systemd/system/course-backend-t3.service
