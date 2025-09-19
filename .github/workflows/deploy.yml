@@ -39,10 +39,10 @@ jobs:
             cd nodeapps/2025/project2/t3
             echo "setting up .env file"
             touch .env
-            echo DB_HOST=${{DB_HOST}} >> .env
-            echo DB_USER=${{DB_USER}} >> .env
-            echo DB_PASSWORD=${{DB_PASSWORD}} >> .env
-            echo DB_SCHEMA=${{DB_SCHEMA}} >> .env
+            echo DB_HOST=${{secrets.DB_HOST}} >> .env
+            echo DB_USER=${{secrets.DB_USER}} >> .env
+            echo DB_PASSWORD=${{secrets.DB_PASSWORD}} >> .env
+            echo DB_SCHEMA=${{secrets.DB_SCHEMA}} >> .env
             echo "finished setting up .env file"
             npm install
             sudo systemctl stop course-backend-t3
