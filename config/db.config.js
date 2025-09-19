@@ -1,8 +1,10 @@
+require('dotenv').config();
+
 module.exports = {
-    HOST: 'localhost',
-    USER: 't32025',
-    PASSWORD: 'CS@oc2025t3',
-    DB: 'course-t3',
+    HOST: process.env.DB_HOST,
+    USER: process.env.DB_USER,
+    PASSWORD: process.env.DB_PASSWORD,
+    DB: process.env.DB_SCHEMA,
     dialect: 'mariadb',
     pool: {
         max: 5,
