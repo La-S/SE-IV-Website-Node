@@ -1,7 +1,3 @@
-
-//NOT IMPLEMENTED. TODO
-
-
 const db = require("../models");
 const Course = db.Course;
 const Op = db.Sequelize.Op;
