@@ -1,40 +1,39 @@
-const db = require('./index.js');
-module.exports = (sequelize, DataTypes) => {
-    console.log("sequelize : " + sequelize);
+module.exports = (sequelize, Sequelize) => {
     const Course = sequelize.define(
         'Course',
         {
             id: {
-                type: DataTypes.INTEGER,
+                type: Sequelize.INTEGER,
                 primaryKey: true,
                 autoIncrement: true,
 
             },
             department: {
-                type: DataTypes.CHAR(4),
+                type: Sequelize.CHAR(4),
                 allowNull: false,
             },
             number: {
-                type: DataTypes.STRING(12),
+                type: Sequelize.STRING(12),
                 allowNull: false,
             },
             level: {
-                type: DataTypes.INTEGER,
+                type: Sequelize.INTEGER,
                 allowNull: false,
                 defaultValue: 0,
             },
             hours: {
-                type: DataTypes.INTEGER,
+                type: Sequelize.INTEGER,
                 allowNull: false,
                 defaultValue: 0,
             },
             name: {
-                type: DataTypes.STRING(128),
+                type: Sequelize.STRING(128),
                 allowNull: false,
             },
             description: {
-                type: DataTypes.STRING(2048)
+                type: Sequelize.STRING(2048)
             }
         }
     )
+    return Course;
 }
