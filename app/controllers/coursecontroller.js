@@ -4,7 +4,7 @@ const Op = db.Sequelize.Op;
 const missingAttr = "Missing attribute: "
 
 // Create and Save a new Course
-exports.create = (req, res) => {
+exports.create = async (req, res) => {
     // Validate request
     let error = checkAttributes(req);
      if (error) {
@@ -13,6 +13,10 @@ exports.create = (req, res) => {
        });
        return;
      }
+    if (await findCourseByNumber(req.body.number)){
+      res.status(400).send({ message: `Course with number: ${req.body.number} already exists.`});
+      return;
+    }
   
     // Create Course from request
     const course = {
@@ -76,8 +80,12 @@ exports.get = (req, res) => {
   };
 
 // Update a Course by specified id
-exports.update = (req, res) => {
+exports.update = async (req, res) => {
     const id = req.params.id;
+        if (!(await findCourseById(id))){
+      res.status(404).send({ message: `No course for id: ${id} found.`});
+      return;
+    }
   
     Course.update(req.body, {
       where: { id: id }
@@ -89,7 +97,7 @@ exports.update = (req, res) => {
           });
         } else {
           res.status(400).send({
-            message: `Cannot update Course with id: ${id}. Maybe Course was not found or req.body is empty!`
+            message: `Cannot update Course with id: ${id}. Check the request body.`
           });
         }
       })
@@ -102,9 +110,13 @@ exports.update = (req, res) => {
 
 // Delete a Course with the specified id
 
-exports.delete = (req, res) => {
+exports.delete = async (req, res) => {
     const id = req.params.id;
-  
+    if (!(await findCourseById(id))){
+      res.status(404).send({ message: `No course for id: ${id} found.`});
+      return;
+    }
+
     Course.destroy({
       where: { id: id }
     })
@@ -115,7 +127,7 @@ exports.delete = (req, res) => {
           });
         } else {
           res.status(400).send({
-            message: `Cannot delete Course with id=${id}. Maybe Course wasn't found.`
+            message: `Cannot delete Course with id=${id}. There may be some deletion restriction.`
           });
         }
       })
@@ -125,6 +137,15 @@ exports.delete = (req, res) => {
         });
       });
   };
+
+  async function findCourseByNumber(queryNum){
+    return course = !!await Course.findOne({where: {number:queryNum}});// ? true : false;
+
+  }
+
+  async function findCourseById(id){
+    return course = !!await Course.findByPk(id)// ? true : false;
+  }
 
   function checkAttributes(req){
     if (!req.body.department)
