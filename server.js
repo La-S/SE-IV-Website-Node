@@ -21,6 +21,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.get("/", (req, res) => {
   res.json({ message: "Courses App." });
 });
+require("./routes/courses.js")(app);
 
 // set port, listen for requests
 const PORT = process.env.PORT || 8080;

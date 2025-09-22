@@ -3,38 +3,42 @@
 
 
 const db = require("../models");
-const Course = db.tutorials;
+const Course = db.Course;
 const Op = db.Sequelize.Op;
+const missingAttr = "Missing attribute: "
 
 // Create and Save a new Course
 exports.create = (req, res) => {
     // Validate request
-    // if (!req.body.title) {
-    //   res.status(400).send({
-    //     message: "Content can not be empty!"
-    //   });
-    //   return;
-    // }
+    let error = checkAttributes(req);
+     if (error) {
+       res.status(400).send({
+         message: error
+       });
+       return;
+     }
   
-    // // Create a Tutorial
-    // const tutorial = {
-    //   title: req.body.title,
-    //   description: req.body.description,
-    //   published: req.body.published ? req.body.published : false
-    // };
+    // Create Course from request
+    const course = {
+      department: req.body.department,
+      number: req.body.number,
+      name: req.body.name,
+      level: req.body. level,
+      hours: req.body.hours,
+      description: req.body.description ? req.body.description : ""
+    };
   
-    // // Save Tutorial in the database
-    // Tutorial.create(tutorial)
-    //   .then(data => {
-    //     res.send(data);
-    //   })
-    //   .catch(err => {
-    //     res.status(500).send({
-    //       message:
-    //         err.message || "Some error occurred while creating the Tutorial."
-    //     });
-    //   });
-    res.send("NOT IMPLEMENTED: CREATE COURSE")
+    // Save Course in db
+    Course.create(course)
+      .then(data => {
+        res.send(data);
+      })
+      .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while creating the Course."
+        });
+      });
   };
 
 // Get all courses from the database
@@ -129,3 +133,17 @@ exports.delete = (req, res) => {
     //   });
     res.send("NOT IMPLEMENTED: DELETE COURSE")
   };
+
+  function checkAttributes(req){
+    if (!req.body.department)
+      return missingAttr + "department";
+    if (!req.body.number)
+      return missingAttr + "number";
+    if (!req.body.name)
+      return missingAttr + "name";
+        if (!req.body.level)
+      return missingAttr + "level";
+        if (!req.body.hours)
+      return missingAttr + "hours";
+    return null;
+  }
