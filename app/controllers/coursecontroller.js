@@ -43,95 +43,91 @@ exports.create = (req, res) => {
 
 // Get all courses from the database
 exports.findAll = (req, res) => {
-    // const title = req.query.title;
-    // var condition = title ? { title: { [Op.like]: `%${title}%` } } : null;
+    //const title = req.query.title;
+    //var condition = title ? { title: { [Op.like]: `%${title}%` } } : null;
   
-    // Tutorial.findAll({ where: condition })
-    //   .then(data => {
-    //     res.send(data);
-    //   })
-    //   .catch(err => {
-    //     res.status(500).send({
-    //       message:
-    //         err.message || "Some error occurred while retrieving tutorials."
-    //     });
-    //   });
-    res.send("NOT IMPLEMENTED: GET ALL COURSES")
+    Course.findAll()
+      .then(data => {
+        res.send(data);
+      })
+      .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while retrieving courses"
+        });
+      });
   };
 
 // Find a single Course based on id
 exports.get = (req, res) => {
-    // const id = req.params.id;
+    const id = req.params.id;
   
-    // Tutorial.findByPk(id)
-    //   .then(data => {
-    //     if (data) {
-    //       res.send(data);
-    //     } else {
-    //       res.status(404).send({
-    //         message: `Cannot find Tutorial with id=${id}.`
-    //       });
-    //     }
-    //   })
-    //   .catch(err => {
-    //     res.status(500).send({
-    //       message: "Error retrieving Tutorial with id=" + id
-    //     });
-    //   });
-    res.send("NOT IMPLEMENTED: GET COURSE")
+    Course.findByPk(id)
+      .then(data => {
+        if (data) {
+          res.send(data);
+        } else {
+          res.status(404).send({
+            message: `No course found for id: ${id}.`
+          });
+        }
+      })
+      .catch(err => {
+        res.status(500).send({
+          message: `Error retrieving Course for id: ${id}`
+        });
+      });
   };
 
 // Update a Course by specified id
 exports.update = (req, res) => {
-    // const id = req.params.id;
+    const id = req.params.id;
   
-    // Tutorial.update(req.body, {
-    //   where: { id: id }
-    // })
-    //   .then(num => {
-    //     if (num == 1) {
-    //       res.send({
-    //         message: "Tutorial was updated successfully."
-    //       });
-    //     } else {
-    //       res.send({
-    //         message: `Cannot update Tutorial with id=${id}. Maybe Tutorial was not found or req.body is empty!`
-    //       });
-    //     }
-    //   })
-    //   .catch(err => {
-    //     res.status(500).send({
-    //       message: "Error updating Tutorial with id=" + id
-    //     });
-    //   });
-    res.send("NOT IMPLEMENTED: UPDATE COURSE")
+    Course.update(req.body, {
+      where: { id: id }
+    })
+      .then(num => {
+        if (num == 1) {
+          res.send({
+            message: "Course was updated successfully."
+          });
+        } else {
+          res.status(400).send({
+            message: `Cannot update Course with id: ${id}. Maybe Course was not found or req.body is empty!`
+          });
+        }
+      })
+      .catch(err => {
+        res.status(500).send({
+          message: `Error updating Course for id: ${id}`
+        });
+      });
   };
 
 // Delete a Course with the specified id
 
 exports.delete = (req, res) => {
-    // const id = req.params.id;
+    const id = req.params.id;
   
-    // Tutorial.destroy({
-    //   where: { id: id }
-    // })
-    //   .then(num => {
-    //     if (num == 1) {
-    //       res.send({
-    //         message: "Tutorial was deleted successfully!"
-    //       });
-    //     } else {
-    //       res.send({
-    //         message: `Cannot delete Tutorial with id=${id}. Maybe Tutorial was not found!`
-    //       });
-    //     }
-    //   })
-    //   .catch(err => {
-    //     res.status(500).send({
-    //       message: "Could not delete Tutorial with id=" + id
-    //     });
-    //   });
-    res.send("NOT IMPLEMENTED: DELETE COURSE")
+    Course.destroy({
+      where: { id: id }
+    })
+      .then(num => {
+        if (num == 1) {
+          res.send({
+            message: "Course was deleted successfully!"
+          });
+        } else {
+          res.status(400).send({
+            message: `Cannot delete Course with id=${id}. Maybe Course wasn't found.`
+          });
+        }
+      })
+      .catch(err => {
+        res.status(500).send({
+          message: `Could not delete Course with id=$`
+        });
+      });
   };
 
   function checkAttributes(req){
