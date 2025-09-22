@@ -9,8 +9,6 @@ const missingAttr = "Missing attribute: "
 
 // Create and Save a new Course
 exports.create = (req, res) => {
-    console.log(db);
-    console.log(db.Course);
     // Validate request
     let error = checkAttributes(req);
      if (error) {
