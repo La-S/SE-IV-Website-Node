@@ -1,4 +1,6 @@
+const db = require('./index.js');
 module.exports = (sequelize, DataTypes) => {
+    console.log("sequelize : " + sequelize);
     const Course = sequelize.define(
         'Course',
         {
