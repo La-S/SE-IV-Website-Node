@@ -82,9 +82,18 @@ exports.get = (req, res) => {
 // Update a Course by specified id
 exports.update = async (req, res) => {
     const id = req.params.id;
-        if (!(await findCourseById(id))){
+    let courseById = null;
+    let courseByNumber = null;
+        if (!(courseById = await findCourseById(id))){
       res.status(404).send({ message: `No course for id: ${id} found.`});
       return;
+    }
+    if (req.body.number){
+      if ((courseByNumber = await findCourseByNumber(req.body.number)) 
+        && (JSON.stringify(courseById) !== JSON.stringify(courseByNumber))){
+        res.status(400).send({message: `Course for number ${req.body.number} exists. Please use a different course number`})
+        return;
+      }
     }
   
     Course.update(req.body, {
@@ -139,12 +148,13 @@ exports.delete = async (req, res) => {
   };
 
   async function findCourseByNumber(queryNum){
-    return course = !!await Course.findOne({where: {number:queryNum}});// ? true : false;
+    course = await Course.findOne({where: {number:queryNum}});// ? true : false;
+    return course;
 
   }
 
   async function findCourseById(id){
-    return course = !!await Course.findByPk(id)// ? true : false;
+    return course = await Course.findByPk(id)// ? true : false;
   }
 
   function checkAttributes(req){
