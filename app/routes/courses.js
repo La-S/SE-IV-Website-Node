@@ -7,5 +7,5 @@ module.exports = app => {
     router.post("/course", courseController.create);
     router.delete("/course/:id", courseController.delete);
 
-    app.use('/coursesapi', router);
+    app.use('/course-t3', router);
 }
