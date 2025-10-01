@@ -5,27 +5,28 @@ const missingAttr = "Missing attribute: "
 
 // Create and Save a new Course
 exports.create = async (req, res) => {
+    let newCourse = req.body
     // Validate request
-    let error = checkAttributes(req);
-     if (error) {
+    let attributeError = checkAttributes(newCourse);
+     if (attributeError) {
        res.status(400).send({
-         message: error
+         message: attributeError
        });
        return;
-     }
-    if (await findCourseByNumber(req.body.number)){
-      res.status(400).send({ message: `Course with number: ${req.body.number} already exists.`});
+      }
+    if (await findCourseByNumber(newCourse.number)){
+      res.status(400).send({ message: `Course with number: ${newCourse.number} already exists.`});
       return;
     }
   
     // Create Course from request
     const course = {
-      department: req.body.department,
-      number: req.body.number,
-      name: req.body.name,
-      level: req.body. level,
-      hours: req.body.hours,
-      description: req.body.description ? req.body.description : ""
+      department: newCourse.department,
+      number: newCourse.number,
+      name: newCourse.name,
+      level: newCourse.level,
+      hours: newCourse.hours,
+      description: newCourse.description ? newCourse.description : ""
     };
   
     // Save Course in db
@@ -132,7 +133,7 @@ exports.delete = async (req, res) => {
       .then(num => {
         if (num == 1) {
           res.send({
-            message: "Course was deleted successfully!"
+            message: "Course was deleted successfully."
           });
         } else {
           res.status(400).send({
@@ -143,6 +144,76 @@ exports.delete = async (req, res) => {
       .catch(err => {
         res.status(500).send({
           message: `Could not delete Course with id=${id}`
+        });
+      });
+  };
+
+  exports.uploadArray = async (req, res) => {
+    let data = req.body;
+    console.log(data);
+    const errors = [];
+    
+    for (const course of data){
+      try{
+        await createForArray(course);
+      } catch (error){
+        errors.push(JSON.stringify(error));
+      }
+    }
+
+
+    if (errors.length == data.length){
+      let responseString = "All course uploads failed.";
+      res.status(400).send({
+        message: responseString});
+      }
+    else if (errors.length != 0) {
+      let responseString = "Some courses failed. Likely duplicates already in database.";      
+      res.status(200).send({
+        message: responseString});
+      }
+    else
+      res.status(200).send({
+        message: "All courses added successfully"});
+  }
+
+  async function createForArray (req){
+    let newCourse = req;
+    let attributeError = checkAttributes(newCourse);
+     if (attributeError) {
+        throw Error({message: attributeError});
+     }
+    if (await findCourseByNumber(newCourse.number)){
+        throw Error({message: `Course with number: ${newCourse.number} already exists.`});
+    }
+  
+    // Create Course from request
+    const course = {
+      department: newCourse.department,
+      number: newCourse.number,
+      name: newCourse.name,
+      level: newCourse.level,
+      hours: newCourse.hours,
+      description: newCourse.description ? newCourse.description : ""
+    };
+  
+    // Save Course in db
+    Course.create(course);
+  };
+
+// Get all courses from the database
+exports.findAll = (req, res) => {
+    //const title = req.query.title;
+    //var condition = title ? { title: { [Op.like]: `%${title}%` } } : null;
+  
+    Course.findAll()
+      .then(data => {
+        res.send(data);
+      })
+      .catch(err => {
+        res.status(500).send({
+          message:
+            err.message || "Some error occurred while retrieving courses"
         });
       });
   };
@@ -158,15 +229,15 @@ exports.delete = async (req, res) => {
   }
 
   function checkAttributes(req){
-    if (!req.body.department)
+    if (!req.department)
       return missingAttr + "department";
-    if (!req.body.number)
+    if (!req.number)
       return missingAttr + "number";
-    if (!req.body.name)
+    if (!req.name)
       return missingAttr + "name";
-        if (!req.body.level)
+        if (!req.level)
       return missingAttr + "level";
-        if (!req.body.hours)
+        if (!req.hours)
       return missingAttr + "hours";
     return null;
   }
