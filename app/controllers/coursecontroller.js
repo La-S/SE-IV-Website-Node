@@ -14,7 +14,7 @@ exports.create = async (req, res) => {
        return;
      }
     if (await findCourseByNumber(req.body.number)){
-      res.status(400).send({ message: `Course with number: ${req.body.number} already exists.`});
+      res.status(409).send({ message: `Course with number: ${req.body.number} already exists.`});
       return;
     }
   
