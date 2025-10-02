@@ -17,12 +17,12 @@ module.exports = (sequelize, Sequelize) => {
                 allowNull: false,
             },
             level: {
-                type: Sequelize.INTEGER,
+                type: Sequelize.CHAR(1),
                 allowNull: false,
                 defaultValue: 0,
             },
             hours: {
-                type: Sequelize.INTEGER,
+                type: Sequelize.CHAR(1),
                 allowNull: false,
                 defaultValue: 0,
             },
