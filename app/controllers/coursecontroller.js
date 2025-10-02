@@ -93,7 +93,7 @@ exports.update = async (req, res) => {
   if (req.body.number) {
     if ((courseByNumber = await findCourseByNumber(req.body.number))
       && (JSON.stringify(courseById) !== JSON.stringify(courseByNumber))) {
-      res.status(400).send({ message: `Course for number ${req.body.number} exists. Please use a different course number` })
+      res.status(409).send({ message: `Course for number ${req.body.number} exists. Please use a different course number` })
       return;
     }
   }
