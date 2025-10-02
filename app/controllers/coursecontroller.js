@@ -14,6 +14,7 @@ exports.create = async (req, res) => {
     });
     return;
   }
+  newCourse.number = String(newCourse.number).substring(0,12);
   if (await findCourseByNumber(newCourse.number)) {
     res.status(400).send({ message: `Course with number: ${newCourse.number} already exists.` });
     return;
