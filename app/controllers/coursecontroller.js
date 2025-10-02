@@ -154,6 +154,13 @@ exports.uploadArray = async (req, res) => {
   console.log(data);
   const errors = [];
 
+  if (!data[0]){
+    res.status(400).send({
+      message: "This endpoint only accepts arrays as input"
+    });
+    return;
+  }
+
   for (const course of data) {
     try {
       await createForArray(course);
@@ -187,6 +194,7 @@ async function createForArray(req) {
   if (attributeError) {
     throw Error({ message: attributeError });
   }
+  newCourse.number = String(newCourse.number).substring(0,12);
   if (await findCourseByNumber(newCourse.number)) {
     throw Error({ message: `Course with number: ${newCourse.number} already exists.` });
   }
