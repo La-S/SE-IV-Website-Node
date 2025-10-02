@@ -6,6 +6,7 @@ module.exports = app => {
     router.put("/course/:id", courseController.update);
     router.post("/course", courseController.create);
     router.delete("/course/:id", courseController.delete);
+    router.post("/courses", courseController.uploadArray);
 
     app.use('/course-t3', router);
 }
